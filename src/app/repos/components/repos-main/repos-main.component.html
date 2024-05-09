@@ -1,0 +1,86 @@
+<main class="d-flex flex-column w-75 m-auto align-items-center">
+  <a href="#" [routerLink]="['/']">Back To Home</a>
+  <h1 class="text-center">Repositories</h1>
+  <input
+    class="form-control-lg w-50 mt-5"
+    type="text"
+    placeholder="Search respository"
+    [formControl]="repoSearchControl"
+  />
+
+  @if(repoSearchControl.value && repoSearchControl.value.trim()){
+  <div class="mt-5">
+    <div class="row g-3 align-items-center">
+      <div class="col-auto">
+        <label for="language" class="col-form-label">Language</label>
+      </div>
+      <div class="col-auto">
+        <input
+          type="text"
+          id="language"
+          class="form-control"
+          [formControl]="langaugeFilterControl"
+        />
+      </div>
+
+      <div class="col-auto">
+        <label for="stars" class="col-form-label">Minimum Stars</label>
+      </div>
+      <div class="col-auto">
+        <input
+          type="text"
+          id="stars"
+          class="form-control"
+          [formControl]="starFilterControl"
+        />
+      </div>
+    </div>
+  </div>
+  }
+
+  <app-table
+    [data]="data()"
+    [page]="page"
+    [pageSize]="pageSize"
+    [isLoading]="isLoading()"
+    [hasError]="hasError()"
+    (pageChange)="onPageChange($event)"
+    (retry)="onRetry($event)"
+  >
+    <thead table-header>
+      <tr>
+        <th class="w-50" scope="col">Name</th>
+        <th class="w-25" scope="col">Owner</th>
+        <th class="w-25" scope="col">Creation Date</th>
+      </tr>
+    </thead>
+
+    <tbody table-body>
+      @for (item of data()?.items; track item.id) {
+      <tr
+        style="height: 60px"
+        class="pointer"
+        [routerLink]="['/repos', item.full_name, 'commits']"
+        [state]="{ queryParams }"
+      >
+        <td>
+          {{ item.full_name }}
+        </td>
+        <td>
+          <img
+            [src]="item.owner.avatar_url"
+            style="width: 40px; border-radius: 50%"
+          />
+        </td>
+        <td>{{ item.created_at | date }}</td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="100" class="text-center">
+          There is no data to show. Please search somethings.
+        </td>
+      </tr>
+      }
+    </tbody>
+  </app-table>
+</main>

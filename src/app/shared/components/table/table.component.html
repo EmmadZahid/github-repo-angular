@@ -1,0 +1,36 @@
+<div class="mt-5 w-100 position-relative">
+  <div class="table-container overflow-auto">
+    @if(data){
+    <table class="table table-striped">
+      <ng-content select="[table-header]"></ng-content>
+      <ng-content select="[table-body]"></ng-content>
+    </table>
+    } @else if(!isLoading && !hasError) {
+    <div class="text-center">There is no data to show.</div>
+    }
+  </div>
+
+  @if(isLoading) {
+  <div class="overlay">
+    <p>Loading...</p>
+  </div>
+  } @if(hasError){
+  <div class="error">
+    Some Error Occurred
+    <a href="#" class="mx-2" (click)="onRetry($event)">Retry</a>
+  </div>
+  } @if(data){
+  <div class="d-flex justify-content-around mt-3">
+    <ngb-pagination
+      [collectionSize]="data.total_count"
+      [page]="page"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)"
+      [maxSize]="5"
+    >
+      <ng-template ngbPaginationPrevious>Prev</ng-template>
+      <ng-template ngbPaginationNext>Next</ng-template>
+    </ngb-pagination>
+  </div>
+  }
+</div>

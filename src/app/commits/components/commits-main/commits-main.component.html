@@ -1,0 +1,50 @@
+<main class="d-flex flex-column w-75 m-auto align-items-center">
+  <a href="#" [routerLink]="['/repos']" [queryParams]="getRepoQueryParams()"
+    >Back To Repositories</a
+  >
+  <h1 class="text-center">
+    Commits for <span style="font-weight: bold">{{ repository }}</span>
+  </h1>
+  <input
+    class="form-control-lg w-50 mt-5"
+    type="text"
+    placeholder="Search commits"
+    [formControl]="commitsSearchControl"
+  />
+
+  <app-table
+    [data]="data()"
+    [page]="page"
+    [pageSize]="pageSize"
+    [isLoading]="isLoading()"
+    [hasError]="hasError()"
+    (pageChange)="onPageChange($event)"
+    (retry)="onRetry($event)"
+  >
+    <thead table-header>
+      <tr>
+        <th class="w-50" scope="col">Commit Author</th>
+        <th class="w-25" scope="col">URL</th>
+        <th class="w-25" scope="col">Commit Message</th>
+      </tr>
+    </thead>
+
+    <tbody table-body>
+      @for (item of data()?.items; track item.id) {
+      <tr>
+        <td>
+          {{ item.authorName }}
+        </td>
+        <td>
+          <a [href]="item.url" target="blank">{{ item.url }}</a>
+        </td>
+        <td>{{ item.message }}</td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="100" class="text-center">There is no data to show.</td>
+      </tr>
+      }
+    </tbody>
+  </app-table>
+</main>
